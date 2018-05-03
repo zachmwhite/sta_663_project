@@ -13,12 +13,11 @@ def hmc(X,y,niter = 6000,burnin = 1000,nleapfrog = 6,nnewton = 1,alpha = 100,ini
     G = np.eye(D)*initv
 
     theta = np.ones((D,1))*1e-3
-    thetasamples = np.zeros((niter - burnin,D))
+    thetasamples = np.zeros(D)
 
     Xtheta = X.dot(theta)
     Cur_LL = hp.lognorm(np.zeros(D),theta.reshape(D,),alpha) + Xtheta.T.dot(y) - np.sum(np.log(1 + np.exp(Xtheta)))
 
-    for it in range(niter):
         print("Iteration Num: ", it)
         new_theta = theta
 
@@ -72,6 +71,8 @@ def hmc(X,y,niter = 6000,burnin = 1000,nleapfrog = 6,nnewton = 1,alpha = 100,ini
             theta = new_theta
 
         if it >= burnin:
-            thetasamples[it-burnin,:] = theta.reshape(D,)
+            
+            thetasamples = np.r_[thetasamples,theta.reshape(D,)]
 
+            
     return thetasamples
